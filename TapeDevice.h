@@ -7,9 +7,16 @@
 #include <iostream>
 #include <filesystem>
 
+struct config {
+    int readDelay = 0;
+    int writeDelay = 0;
+    int moveDelay = 0;
+};
+
 class TapeDevice : public Tape {
 public:
-    explicit TapeDevice(const std::string &filename);
+    explicit TapeDevice(const std::string &path);
+    TapeDevice(const std::string &path, const config &delays);
     ~TapeDevice();
 
     TapeDevice(TapeDevice &&other) = default;
@@ -30,9 +37,7 @@ private:
     std::fstream file;
     int currPos = 0;
 
-    int readDelay = 0;
-    int writeDelay = 0;
-    int moveDelay = 0;
+    config delays;
 
     std::vector<int> tape;
 };

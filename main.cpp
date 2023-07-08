@@ -1,6 +1,9 @@
 #include <string>
 #include <algorithm>
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 #include "TapeDevice.h"
 
 void sort(TapeDevice &inputTape, TapeDevice &outputTape, const int &RAM) {
@@ -69,17 +72,24 @@ int main() {
     try {
         std::string inputFile, outputFile, configFile;
         int RAM;
-        std::cout << "Enter the input tape file:";
+        std::cout << "Enter the path to the input tape file:";
         std::cin >> inputFile;
-        std::cout << "Enter the output tape file:";
+        std::cout << "Enter the path to the output tape file:";
         std::cin >> outputFile;
-//    std::cout << "Enter the config file:";
-//    std:: cin >> configFile;
+        std::cout << "Enter the path to config file:";
+        std:: cin >> configFile;
         std::cout << "Enter the amount of RAM:";
         std::cin >> RAM;
 
-        TapeDevice inputTape(inputFile);
-        TapeDevice outputTape(outputFile);
+        boost::property_tree::ptree root;
+        boost::property_tree::read_json(configFile, root);
+        config delays;
+        delays.readDelay = root.get<int>("readDelay");
+        delays.writeDelay = root.get<int>("writeDelay");
+        delays.moveDelay = root.get<int>("moveDelay");
+
+        TapeDevice inputTape(inputFile, delays);
+        TapeDevice outputTape(outputFile, delays);
 
         sort(inputTape, outputTape, RAM);
     } catch (std::exception &e) {
