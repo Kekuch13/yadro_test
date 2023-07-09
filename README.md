@@ -57,7 +57,6 @@ Enter the amount of RAM:5
 Sorting started  
 Sorting in progress      
 Sorting is finished   
-
 ```
 
 
