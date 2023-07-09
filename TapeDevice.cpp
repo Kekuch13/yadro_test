@@ -16,7 +16,7 @@ TapeDevice::TapeDevice(const std::string &path) : path(path) {
     file.exceptions(std::fstream::badbit | std::fstream::failbit);
 }
 
-TapeDevice::TapeDevice(const std::string &path, const config &delays) : TapeDevice(path) {
+TapeDevice::TapeDevice(const std::string &path, const Config &delays) : TapeDevice(path) {
     this->delays = delays;
 }
 
@@ -46,9 +46,10 @@ void TapeDevice::readFromFile() {
 }
 
 void TapeDevice::writeToFile() {
-    for (const auto &elem : tape) {
-        file << elem << "\n";
+    for (size_t i = 0; i < tape.size() - 1; ++i) {
+        file << tape[i] << "\n";
     }
+    file << tape.back();
 }
 
 int &TapeDevice::read() {
